@@ -2,6 +2,7 @@ task :default => :build
 
 task :build do
   ruby "build_development.rb"
+  cp "build/bruby-mruby.js", "bin/bruby-mruby.js"
 end
 
 task :clean do
