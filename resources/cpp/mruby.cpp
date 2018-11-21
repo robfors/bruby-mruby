@@ -28,6 +28,8 @@ void MRuby::halt_on_error()
 
 void MRuby::initialize()
 {
+  if (_mrb)
+    val::global("Error").new_(val("interpreter already alive")).throw_();
   _mrb = mrb_open();
   if (!_mrb)
     val::global("Error").new_(val("error opening new mrb state")).throw_();
