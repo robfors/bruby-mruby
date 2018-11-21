@@ -46,11 +46,12 @@ project_directory = File.expand_path(File.dirname(__FILE__))
 build_directory = "#{project_directory}/build"
 FileUtils.mkdir_p(build_directory)
 
-ENV["MRUBY_CONFIG"] = "#{project_directory}/mruby_config_development.rb"
 mruby_directory = "#{project_directory}/resources/mruby"
 # build mruby lib
 raise 'mruby submodule not loaded' unless File.file?("#{mruby_directory}/Rakefile")
+ENV["MRUBY_CONFIG"] = "#{project_directory}/mruby_config_development.rb"
 Dir.chdir(mruby_directory) { RakeFileUtils.sh("rake") }
+ENV["MRUBY_CONFIG"] = nil
 libmruby_path = "#{build_directory}/emscripten/lib/libmruby.a"
 
 bruby_bridge_interface_directory = "#{project_directory}/resources/bruby_gems/bruby-bridge-interface"
