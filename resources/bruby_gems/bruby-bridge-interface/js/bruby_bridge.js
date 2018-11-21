@@ -1,0 +1,1 @@
+BRubyBridge = class {};
