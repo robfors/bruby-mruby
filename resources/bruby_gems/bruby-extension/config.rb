@@ -15,7 +15,6 @@ Extraneous::Module::Specification.new do |spec|
   # list as many ruby source files as you want
   # keep in mind they will be executed in the order you list them
   spec.source(path: 'rb/kernel.rb', type: 'ruby')
-  spec.source(path: 'rb/string.rb', type: 'ruby')
   
   #dependency mruby-bruby-bridge-interface
   #  spec.license = 'MIT'
