@@ -30,6 +30,7 @@ namespace BRubyBridge
         js_interface = object_js[_backward_reference_key].as<RbWeakReference>().get_object();
         return js_interface;
       }
+
       js_interface = mrb_obj_new(mrb, class_mrb, 0, NULL);
       
       // set up forward reference
@@ -152,7 +153,7 @@ namespace BRubyBridge
     mrb_value initialize(mrb_state* mrb, mrb_value js_interface)
     {
       // clear any existing data
-      val* object_js_ptr = (val*)mrb_data_get_ptr(mrb, js_interface, &_internal_data_type);
+      val* object_js_ptr = (val*)DATA_PTR(js_interface);
       if (object_js_ptr != nullptr)
       {
         mrb_free(mrb, object_js_ptr);
@@ -177,22 +178,20 @@ namespace BRubyBridge
     
     void setup()
     {
-      //_backward_reference_key = val::global().call<val>("Symbol");
-      // for debug purposes we will use a string
-      _backward_reference_key = val("_backward_reference_key");
+      _backward_reference_key = val::global().call<val>("Symbol");
       
       js_class = BRubyBridge::js_class["JSInterface"];
 
       RClass* parent_module_mrb = BRubyBridge::module_mrb;
       class_mrb = mrb_define_class_under(mrb, parent_module_mrb, "JSInterface", mrb->object_class);
       MRB_SET_INSTANCE_TT(class_mrb, MRB_TT_DATA);
-      // mrb_undef_class_method(mrb,  class_mrb, "new"); (note to self) test this later
+      mrb_undef_class_method(mrb,  class_mrb, "new");
       mrb_define_class_method(mrb, class_mrb, "global", global, MRB_ARGS_NONE());
-      mrb_define_class_method(mrb, class_mrb, "initialize", initialize, MRB_ARGS_NONE());
       mrb_define_class_method(mrb, class_mrb, "number", number, MRB_ARGS_REQ(1));
       mrb_define_class_method(mrb, class_mrb, "string", string_, MRB_ARGS_OPT(1));
       mrb_define_method(mrb, class_mrb, "call", call, MRB_ARGS_REQ(1)|MRB_ARGS_REST());
       mrb_define_method(mrb, class_mrb, "get", get, MRB_ARGS_REQ(1));
+      mrb_define_method(mrb, class_mrb, "initialize", initialize, MRB_ARGS_NONE());
       mrb_define_method(mrb, class_mrb, "to_boolean", to_boolean, MRB_ARGS_NONE());
       mrb_define_method(mrb, class_mrb, "to_float", to_float, MRB_ARGS_NONE());
       mrb_define_method(mrb, class_mrb, "to_string", to_string, MRB_ARGS_NONE());

@@ -8,9 +8,9 @@ MRuby::Build.new do |conf|
   
   toolchain :gcc
   
-  conf.enable_debug
+  #conf.enable_debug
   
-  conf.gembox 'default'
+  #conf.gembox 'default'
   
 end
 
@@ -46,8 +46,8 @@ MRuby::CrossBuild.new('app') do |conf|
   
   conf.gem_clone_dir = "#{$build_directory}/gems"
   conf.gembox 'default'
-  conf.gem(core: 'mruby-print')
-  conf.gem(core: 'mruby-time')
+  #conf.gem(core: 'mruby-print')
+  #conf.gem(core: 'mruby-time')
   conf.gem("#{$project_directory}/resources/mruby_gems/mruby-bruby-bridge-interface")
   
 end
