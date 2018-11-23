@@ -1,8 +1,7 @@
 test("Object#bruby_bridge_rb_interface__get_backward_reference, Object#bruby_bridge_rb_interface__set_backward_reference(object)")
-class A
-end
-a1 = A.new
-a2 = A.new
+a = Class.new
+a1 = a.new
+a2 = a.new
 n = 1
 s = "b"
 a = []

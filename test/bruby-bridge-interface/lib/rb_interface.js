@@ -91,7 +91,7 @@
   delete global.r;
   // returning js value should be valid
   global.v = {};
-  rb_eval("define_method(:m) { puts v0.inspect; v0; }", global.v);
+  rb_eval("define_method(:m) { v0; }", global.v);
   global.r = rb_eval("Object").send("m");
   ensure_result( global.r === global.v );
   rb_eval("Object.undef_method(:m)");
