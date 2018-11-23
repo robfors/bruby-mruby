@@ -60,6 +60,9 @@ Dir.chdir(bruby_bridge_interface_directory) { RakeFileUtils.sh("extraneous build
 bruby_extension = "#{project_directory}/resources/bruby_gems/bruby-extension"
 Dir.chdir(bruby_extension) { RakeFileUtils.sh("extraneous build") }
 
+bruby_mruby_print = "#{project_directory}/resources/bruby_gems/bruby-mruby-print"
+Dir.chdir(bruby_mruby_print) { RakeFileUtils.sh("extraneous build") }
+
 output_name = "bruby-mruby.js"
 output_path = "#{build_directory}/#{output_name}"
 
@@ -85,6 +88,7 @@ options << "-lm"
 options << "--post-js #{project_directory}/resources/js/mruby.js"
 options << "--post-js #{build_directory}/bruby-bridge-interface.js"
 options << "--post-js #{build_directory}/bruby-extension.js"
+options << "--post-js #{build_directory}/bruby-mruby-print.js"
 options << "-O0"
 options << "-g"
 options << "-s DEMANGLE_SUPPORT=1"
@@ -93,5 +97,4 @@ options << "-s ASSERTIONS=2"
 options << "-s WASM=0"
 options << "-s DISABLE_EXCEPTION_CATCHING=0"
 options << "-o #{output_path}"
-
 RakeFileUtils.sh("emcc #{build_directory}/mruby.o #{libmruby_path} #{options.join(" ")}")
