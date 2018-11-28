@@ -85,7 +85,7 @@
   rb_eval("define_method(:m) { v0; }", global.v);
   global.r = rb_eval("Object").send("m");
   ensure_result( global.r instanceof BRubyBridge.RbInterface );
-  ensure_rb_result("v0.equal?(v1)", global.r, global.v)
+  ensure_rb_result("v0.equal?(v1)", global.r, global.v);
   rb_eval("Object.undef_method(:m)");
   delete global.v;
   delete global.r;
@@ -129,52 +129,52 @@
   ensure_rb_result("v0 == []", rb_eval("Object").send("m"));
   rb_eval("Object.undef_method(:m)");
   // single argument passed to rb method
-  global.a = rb_eval("2")
+  global.a = rb_eval("2");
   rb_eval("define_method(:m) { |*a| a; }");
   ensure_rb_result("v0 == [v1]", rb_eval("Object").send("m", global.a), global.a);
   rb_eval("Object.undef_method(:m)");
-  delete global.a
+  delete global.a;
   // multiple arguments passed to rb method
-  global.a1 = rb_eval("'2'")
-  global.a2 = rb_eval("Object")
-  global.a3 = rb_eval("Object.new")
+  global.a1 = rb_eval("'2'");
+  global.a2 = rb_eval("Object");
+  global.a3 = rb_eval("Object.new");
   rb_eval("define_method(:m) { |*a| a; }");
-  global.r = rb_eval("Object").send("m", global.a1, global.a2, global.a3)
+  global.r = rb_eval("Object").send("m", global.a1, global.a2, global.a3);
   ensure_rb_result("v0 == [v1, v2, v3]", global.r, global.a1, global.a2, global.a3);
   rb_eval("Object.undef_method(:m)");
-  delete global.a1
-  delete global.a2
-  delete global.a3
-  delete global.r
+  delete global.a1;
+  delete global.a2;
+  delete global.a3;
+  delete global.r;
   // ensure that passing the same RbInterface again will result in the same rb object
-  global.a = rb_eval("Object.new")
-  rb_eval("$v = []")
+  global.a = rb_eval("Object.new");
+  rb_eval("$v = []");
   rb_eval("define_method(:m) { |a| $v << a; }");
-  rb_eval("Object").send("m", global.a)
-  rb_eval("Object").send("m", global.a)
-  ensure_rb_result("$v[0].equal?($v[1])")
-  rb_eval("$v = nil")
+  rb_eval("Object").send("m", global.a);
+  rb_eval("Object").send("m", global.a);
+  ensure_rb_result("$v[0].equal?($v[1])");
+  rb_eval("$v = nil");
   rb_eval("Object.undef_method(:m)");
-  delete global.a
+  delete global.a;
   // ensure that passing a different RbInterface will result in a different rb object
-  rb_eval("$v = []")
+  rb_eval("$v = []");
   rb_eval("define_method(:m) { |a| $v << a; }");
-  rb_eval("Object").send("m", rb_eval("Object.new"))
-  rb_eval("Object").send("m", rb_eval("Object.new"))
-  ensure_rb_result_not("$v[0].equal?($v[1])")
-  ensure_rb_result_not("$v[0] == $v[1]")
-  rb_eval("$v = nil")
+  rb_eval("Object").send("m", rb_eval("Object.new"));
+  rb_eval("Object").send("m", rb_eval("Object.new"));
+  ensure_rb_result_not("$v[0].equal?($v[1])");
+  ensure_rb_result_not("$v[0] == $v[1]");
+  rb_eval("$v = nil");
   rb_eval("Object.undef_method(:m)");
   // ensure that returning the same rb object again will result in the same RbInterface
-  rb_eval("$r = Object.new")
+  rb_eval("$r = Object.new");
   rb_eval("define_method(:m) { $r }");
-  ensure_result( rb_eval("Object").send("m") === rb_eval("Object").send("m") )
-  rb_eval("$r = nil")
+  ensure_result( rb_eval("Object").send("m") === rb_eval("Object").send("m") );
+  rb_eval("$r = nil");
   rb_eval("Object.undef_method(:m)");
   // ensure that returning a different rb object will result in a different RbInterface
   rb_eval("define_method(:m) { Object.new }");
-  ensure_result_not( rb_eval("Object").send("m") === rb_eval("Object").send("m") )
-  ensure_result_not( rb_eval("Object").send("m") == rb_eval("Object").send("m") )
+  ensure_result_not( rb_eval("Object").send("m") === rb_eval("Object").send("m") );
+  ensure_result_not( rb_eval("Object").send("m") == rb_eval("Object").send("m") );
   rb_eval("Object.undef_method(:m)");
   
 
