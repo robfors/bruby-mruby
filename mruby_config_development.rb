@@ -49,6 +49,7 @@ MRuby::CrossBuild.new('app') do |conf|
   #conf.gem(core: 'mruby-print')
   #conf.gem(core: 'mruby-time')
   conf.gem("#{$project_directory}/resources/mruby_gems/mruby-bruby-bridge-interface")
+  conf.gem(github: 'iij/mruby-regexp-pcre')
   
 end
 
