@@ -25,9 +25,11 @@ namespace BRubyBridge
     {
       mrb_value js_interface;
       bool is_not_primitive = object_js.instanceof(val::global("Object"));
-      if (is_not_primitive && _backward_reference_key.in(object_js))
+      if (is_not_primitive && object_js.call<bool>("hasOwnProperty", _backward_reference_key))
       {
-        js_interface = object_js[_backward_reference_key].as<RbWeakReference>().get_object();
+        js_interface = val::global("Object")
+          .call<val>("getOwnPropertyDescriptor", object_js, _backward_reference_key)["value"]
+          .as<RbWeakReference>().get_object();
         return js_interface;
       }
 

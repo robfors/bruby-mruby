@@ -245,6 +245,16 @@ ensure_js_result("v0 === global.p2", o.get(js_eval("'b'")))
 js_eval("delete global.p1")
 js_eval("delete global.p2")
 o = nil
+# ensure that returning a js subclass after previously returning it's baseclass
+#   will not return the JSInterface for the baseclass
+#   due to inheritance in object's prototype chain
+js_eval("global.cb = class {}")
+js_eval("global.cs = class extends global.cb {}")
+g = js_eval('global')
+ensure_result_not( g.get(js_eval("'cb'")) == g.get(js_eval("'cs'")) )
+js_eval("delete global.cb")
+js_eval("delete global.cs")
+g = nil
 
 
 test("JSInterface#to_boolean")
