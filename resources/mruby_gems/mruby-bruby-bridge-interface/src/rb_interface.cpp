@@ -20,7 +20,6 @@ namespace BRubyBridge
 
   RbInterface::~RbInterface()
   {
-    mrb_gc_unregister(mrb, _object_rb);
   }
 
   
@@ -32,7 +31,6 @@ namespace BRubyBridge
     {
       mrb_gc_register(mrb, object_rb);
       RbInterface interface_cpp;
-      
 
       // build foward reference
       //  (js:RbInterface -> cpp:RbInterface -> c:mrb_value -> rb:object)
@@ -43,6 +41,12 @@ namespace BRubyBridge
       rb_interface = val(interface_cpp); // call this after setting _object_rb to avoid unexpected behavior
       mrb_value js_reference = JSReference::build(rb_interface);
       mrb_funcall_argv(mrb, object_rb, mrb_intern_lit(mrb, "bruby_bridge_rb_interface__set_backward_reference"), 1, &js_reference);
+
+      // TODO: remove this when better solution is available
+      // temporary life cycle management solution
+      val::global()["BRubyBridge"]["RbInterface"]["unprotected_interfaces"].call<void>("push", rb_interface);
+      rb_interface.set("stale", val::global("false"));
+      //
     }
     else
       rb_interface = JSReference::get_object(js_reference);
@@ -57,6 +61,17 @@ namespace BRubyBridge
     mrb_float float_cpp = float_js.as<mrb_float>();
     mrb_value float_rb = mrb_float_value(mrb, float_cpp);
     return build(float_rb);
+  }
+
+
+  void RbInterface::forget()
+  {
+    mrb_value nil = mrb_nil_value();
+    // clear the backward reference the rb object won't point to a stale RbInterface object
+    mrb_funcall_argv(mrb, _object_rb, mrb_intern_lit(mrb, "bruby_bridge_rb_interface__set_backward_reference"), 1, &nil);
+    mrb_gc_unregister(mrb, _object_rb);
+    // clear the forward reference
+    _object_rb = nil;
   }
 
 
@@ -163,6 +178,7 @@ namespace BRubyBridge
       .class_function("float", &RbInterface::float_)
       .class_function("get_object_class", &RbInterface::get_object_class)
       .class_function("string", &RbInterface::string_)
+      .function("forget", &RbInterface::forget)
       .function("send", &RbInterface::send)
       .function("to_boolean", &RbInterface::to_boolean)
       .function("to_number", &RbInterface::to_number)

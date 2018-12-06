@@ -43,6 +43,7 @@ namespace BRubyBridge
     RbInterface();
     ~RbInterface();
     
+    void forget();
     emscripten::val send(emscripten::val method_name_js, emscripten::val arguments_js) const;
     emscripten::val to_boolean() const;
     emscripten::val to_number() const;

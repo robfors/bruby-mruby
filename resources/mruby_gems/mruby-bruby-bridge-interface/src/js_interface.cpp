@@ -20,7 +20,7 @@ namespace BRubyBridge
     // private api
     val _backward_reference_key = val::undefined();
 
-
+    
     mrb_value build(val object_js)
     {
       mrb_value js_interface;
@@ -105,6 +105,7 @@ namespace BRubyBridge
         // clear the backward reference the js object won't point to a stale JSInterface object
         object_js_ptr->delete_(_backward_reference_key);
       }
+      // clear the forward reference
       (*object_js_ptr) = val::undefined();
       object_js_ptr->~val();
       mrb_free(mrb, object_js_ptr);
